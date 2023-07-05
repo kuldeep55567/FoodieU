@@ -1,0 +1,47 @@
+#login-form,
+#signup-form {
+    width: 60%;
+    margin: auto;
+    text-align: center;
+    margin-top: 100px;
+}
+
+input {
+    width: 350px;
+    height: 45px;
+    border-radius: 5px;
+}
+
+::placeholder {
+    font-size: 25px;
+}
+
+.tag {
+    font-size: 50px;
+    text-align: center;
+}
+
+#login-form button,
+#signup-form button {
+    margin-top: 20px;
+}
+img{
+    width: 30%;
+}
+#menu{
+    display: grid;
+    width: 50%;
+    grid-template-columns: repeat(2,1fr);
+    gap: 10px;
+}
+#main{
+    display: flex;
+    width: 80%;
+    margin: auto;
+}
+.dish-item{
+padding: 20px;
+}
+#cart{
+    
+}

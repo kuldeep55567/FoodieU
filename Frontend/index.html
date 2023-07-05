@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Entry</title>
+   <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<style>
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">Home🏠</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="product.html">Menu</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                  </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <h1 class="tag">Welcome to FoodieU</h1>
+      <div id="login-form">
+        <h2>Login</h2>
+        <form id="login">
+            <input type="email" name="email" id="lemail" placeholder="Email" required>
+            <br>
+            <br>
+            <input type="password" name="password" id="lpassword" placeholder="Password" required>
+            <br>
+            <button type="submit" class="btn btn-primary">Log In</button>
+        </form>
+        <p>Don't have an account? <a href="#" onclick="toggleForm()">Sign up</a></p>
+    </div>
+
+    <div id="signup-form" style="display: none;">
+        <h2>Sign Up</h2>
+        <form id="signup">
+            <input type="text" name="username"  id="name" placeholder="Username" required>
+            <br>
+            <br>
+            <input type="email" name="email" id="email" placeholder="Email" required>
+            <br>
+            <br>
+            <input type="password" name="password"  id="password" placeholder="Password" required>
+            <br>
+            <br>
+            <input type="password" name="confirm_password" id="repassword" placeholder="Confirm Password" required>
+            <br>
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="#" onclick="toggleForm()">Log in</a></p>
+    </div>
+</body>
+<script src="index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+</html>
