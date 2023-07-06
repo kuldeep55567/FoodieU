@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>Create Entry</title>
   <link rel="stylesheet" href="style.css">
@@ -14,11 +13,10 @@
     text-align: center;
   }
 </style>
-
 <body>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="about.html">Home🏠</a>
+      <a class="navbar-brand" href="index.html">Home🏠</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -31,51 +29,66 @@
           <li class="nav-item">
             <a class="nav-link" href="about.html">About</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.html">Dashboard</a>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
   <h1>Admin Panel</h1>
-  <div id="hello">
-    <button id="addDishBtn" class="toggle-btn active btn btn-success">Add Dish</button>
-    <button id="removeDishBtn" class="toggle-btn btn btn-danger">Remove Dish</button>
-    <button id="updateStatusBtn" class="toggle-btn btn btn-warning">Update Order Status</button>
-  </div>
-  <div id="addDishForm" class="toggle-form">
-    <h2 class="hii">Add Dish</h2>
-    <form id="adding">
-      <label for="name">Dish Name:</label>
-      <input type="text" id="name" name="name" required><br><br>
-      <label for="price">Price:</label>
-      <input type="number" id="price" name="price" min="0" step="0.01" required><br><br>
-      <label for="image">Description:</label>
-      <input type="text" id="description" name="image" required><br><br>
-      <label for="image">Image:</label>
-      <input type="text" id="image" name="image" required><br><br>
-      <label for="price">Stock:</label>
-      <input type="number" id="stock" name="price" min="1" required><br><br>
-      <button type="submit" class="btn btn-primary">Add Dish</button>
-    </form>
-  </div>
+  <div id="parent">
+    <div id="order-list">
+      <h1>Order History</h1>
+    </div>
+    <div id="main-container">
+      <div id="hello">
+        <button id="addDishBtn" class="toggle-btn active btn btn-success">Add Dish</button>
+        <button id="removeDishBtn" class="toggle-btn btn btn-danger">Remove Dish</button>
+        <button id="updateStatusBtn" class="toggle-btn btn btn-warning">Update Order Status</button>
+        <button id="updateDishBtn" class="toggle-btn btn btn-info">Update Dish</button>
+      </div>
+      <div id="addDishForm" class="toggle-form">
+        <h2 class="hii">Add Dish</h2>
+        <form id="adding">
+          <input type="text" id="name" name="name" required placeholder="Dish Name"><br><br>
+          <input type="number" id="price" name="price" min="0" step="0.01" required placeholder="Price"><br><br>
+          <input type="text" id="description" name="image" required placeholder="Description"><br><br>
+          <input type="text" id="image" name="image" required placeholder="Image"><br><br>
+          <input type="number" id="stock" name="price" min="1" required placeholder="Stock"><br><br>
+          <button type="submit" class="btn btn-primary">Add Dish</button>
+        </form>
+      </div>
+      <div id="updateDishForm" class="toggle-form" style="display: none;">
+        <h2 class="hii">Update Dish</h2>
+        <form id="updateDish">
+          <input type="text" id="uid" name="id" placeholder="Dish ID"><br><br>
+          <input type="text" id="uname" name="name" placeholder="Dish Name"><br><br>
+          <input type="number" id="uprice" name="price" min="0" step="0.01" placeholder="Price"><br><br>
+          <input type="text" id="udescription" name="image" placeholder="Description"><br><br>
+          <input type="text" id="uimage" name="image" placeholder="Price"><br><br>
+          <input type="number" id="ustock" name="price" min="1" placeholder="Stock"><br><br>
+          <button type="submit" class="btn btn-primary">Update Dish</button>
+        </form>
+      </div>
 
-  <div id="removeDishForm" class="toggle-form" style="display: none;">
-    <h2 class="hii">Remove Dish</h2>
-    <form id="deleting">
-      <label for="dish_id">Dish ID:</label>
-      <input type="text" id="dish_id" name="dish_id" required><br><br>
-      <button type="submit" class="btn btn-primary">Remove Dish</button>
-    </form>
-  </div>
+      <div id="removeDishForm" class="toggle-form" style="display: none;">
+        <h2 class="hii">Remove Dish</h2>
+        <form id="deleting">
+          <input type="text" id="dish_id" name="dish_id" required placeholder="Dish ID"><br><br>
+          <button type="submit" class="btn btn-primary">Remove Dish</button>
+        </form>
+      </div>
 
-  <div id="updateStatusForm" class="toggle-form" style="display: none;">
-    <h2 class="hii">Update Order Status</h2>
-    <form id="updating">
-      <label for="order_id">Order ID:</label>
-      <input type="text" id="order_id" name="order_id" required><br><br>
-      <label for="new_status">New Status:</label>
-      <input type="text" id="new_status" name="new_status" required><br><br>
-      <button type="submit" class="btn btn-primary">Update Status</button>
-    </form>
+      <div id="updateStatusForm" class="toggle-form" style="display: none;">
+        <h2 class="hii">Update Order Status</h2>
+        <form id="updating">
+          <input type="text" id="order_id" name="order_id" required placeholder="Order ID"><br><br>
+          <input type="text" id="new_status" name="new_status" required placeholder="New Status"><br><br>
+          <button type="submit" class="btn btn-primary">Update Status</button>
+        </form>
+      </div>
+    </div>
   </div>
 </body>
 <script src="admin.js"></script>
@@ -85,13 +98,16 @@
   addDishBtn.addEventListener("click", () => toggleForm(addDishForm));
   removeDishBtn.addEventListener("click", () => toggleForm(removeDishForm));
   updateStatusBtn.addEventListener("click", () => toggleForm(updateStatusForm));
+  updateDishBtn.addEventListener("click", () => toggleForm(updateDishForm));
   function toggleForm(form) {
     addDishForm.style.display = "none";
     removeDishForm.style.display = "none";
     updateStatusForm.style.display = "none";
+    updateDishForm.style.display = "none";
     addDishBtn.classList.remove("active");
     removeDishBtn.classList.remove("active");
     updateStatusBtn.classList.remove("active");
+    updateDishBtn.classList.remove("active");
     form.style.display = "block";
     if (form === addDishForm) {
       addDishBtn.classList.add("active");
@@ -99,6 +115,8 @@
       removeDishBtn.classList.add("active");
     } else if (form === updateStatusForm) {
       updateStatusBtn.classList.add("active");
+    } else if (form === updateDishForm) {
+      updateDishBtn.classList.add("active")
     }
   }
 </script>

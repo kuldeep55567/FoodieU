@@ -1,4 +1,7 @@
 from flask import Flask, request, jsonify
+from flask_socketio import SocketIO, emit
+import eventlet
+eventlet.monkey_patch()
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import (
@@ -19,6 +22,7 @@ app.config[
 mongo = PyMongo(app)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
 
 @app.route("/")
@@ -63,7 +67,7 @@ def login_user():
     # Generate JWT token
     user_role = user.get("role") if user and "role" in user else "user"
     access_token = create_access_token(identity=str(user["_id"]))
-    return jsonify({"token": access_token,"role":user_role})
+    return jsonify({"token": access_token, "role": user_role})
 
 
 @app.route("/protected", methods=["GET"])
@@ -93,7 +97,7 @@ def get_menu():
 
 
 @app.route("/add_dish", methods=["POST"])
-@jwt_required()
+# @jwt_required()
 def add_dish():
     if not request.is_json:
         return jsonify({"error": "Invalid JSON"}), 400
@@ -115,7 +119,7 @@ def add_dish():
 
 
 @app.route("/remove_dish/<dish_id>", methods=["DELETE"])
-@jwt_required()
+# @jwt_required()
 def remove_dish(dish_id):
     result = mongo.db.menu.delete_one({"_id": ObjectId(dish_id)})
     if result.deleted_count == 0:
@@ -125,7 +129,7 @@ def remove_dish(dish_id):
 
 
 @app.route("/update_dish/<dish_id>", methods=["PATCH"])
-@jwt_required()
+# @jwt_required()
 def update_dish(dish_id):
     dish_name = request.json.get("dish_name")
     img = request.json.get("img")
@@ -201,7 +205,6 @@ def place_order():
 
     return jsonify({"message": "Order placed successfully"})
 
-
 @app.route("/update_order/<order_id>", methods=["PATCH"])
 def update_order(order_id):
     order = mongo.db.orders.find_one({"_id": ObjectId(order_id)})
@@ -209,11 +212,8 @@ def update_order(order_id):
         return jsonify({"error": "Order not found"}), 404
     if "status" in request.json:
         order["status"] = request.json["status"]
-    if "total_price" in request.json:
-        order["total_price"] = request.json["total_price"]
-    if "order_dishes" in request.json:
-        order["order_dishes"] = request.json["order_dishes"]
     mongo.db.orders.update_one({"_id": ObjectId(order_id)}, {"$set": order})
+    socketio.emit("order_status_update", {"order_id": order_id, "status": order["status"]}, broadcast=True)
     return jsonify({"message": "Order updated successfully"})
 
 
@@ -258,13 +258,105 @@ def all_orders():
             "user_id": str(order.get("user", "")),  # Use 'user' instead of 'user_id'
             "dishes": [item["dish_id"] for item in order.get("order_items", [])],
             "total_price": order.get("total_price", 0),
-            "status": order.get("status", "")
+            "status": order.get("status", ""),
         }
         formatted_orders.append(formatted_order)
-
     return jsonify({"orders": formatted_orders})
 
 
+@app.route("/bot", methods=["POST"])
+@jwt_required()
+def bot():
+    current_user_id = get_jwt_identity()
+    user = mongo.db.users.find_one({"_id": ObjectId(current_user_id)})
+    if user is None:
+        return jsonify({"error": "User not found"}), 404
+    message = request.json["message"]
+    if message.lower() in ["hi", "hello","hii","hlo"]:
+        name = user["name"]
+        return jsonify({"response": f"Hi {name}, how can I assist you?"})
+    elif message.lower() == "start":
+        return jsonify(
+            {
+                "response": "Please select an option:",
+                "options": [
+                    {"value": 1, "label": "1. View order history"},
+                    {"value": 2, "label": "2. View menu"},
+                    {"value": 3, "label": "3. Where is my order?"},
+                    {"value": 4, "label": "4. Customer care"},
+                ],
+            }
+        )
+    elif message.lower() == "1":
+        orders = mongo.db.orders.find({"user": current_user_id})
+        if orders is None:
+           return jsonify({"response": "Order your first Meal"}), 404
+        order_history = []
+        for order in orders:
+            order_history.append(
+                {
+                    "order_id": str(order["_id"]),
+                    "total_price": order["total_price"],
+                    "status": order["status"],
+                }
+            )
+        return jsonify({"response": order_history})
+    elif message.lower() == "2":
+        menu = mongo.db.menu.find()
+        menu_list = []
+        for dish in menu:
+            menu_list.append(
+                {
+                    "dish_id": str(dish["_id"]),
+                    "dish_name": dish["dish_name"],
+                    "img": dish["img"],
+                    "description": dish["description"],
+                    "price": dish["price"],
+                    "stock": dish["stock"],
+                }
+            )
+        return jsonify({"response": menu_list})
+    elif message.lower() == "3":
+        order = mongo.db.orders.find_one({"user": current_user_id})
+        if order:
+            status = order.get("status")
+            if status == "Pending":
+                return jsonify(
+                    {
+                        "response": "Your order is pending. Please wait for the restaurant to accept your order."
+                    }
+                )
+            elif status == "Preparing":
+                return jsonify(
+                    {
+                        "response": "Your order is currently being prepared. It will be ready soon."
+                    }
+                )
+            elif status == "Delivered":
+                return jsonify(
+                    {"response": "Your order has been delivered. Enjoy your meal!"}
+                )
+        return jsonify({"response": "No active order found."})
+    elif message.lower() == "4":
+        return jsonify(
+            {
+                "response": "Please contact our customer care at 620-316-7922 for further assistance."
+            }
+        )
+    else:
+        return jsonify(
+            {"response": "Sorry, I didn't understand that. How else can I assist you?"}
+        )
+
+
+@socketio.on("connect")
+def handle_connect():
+    print("Client connected")
+
+
+@socketio.on("disconnect")
+def handle_disconnect():
+    print("Client disconnected")
 
 if __name__ == "__main__":
     app.run(debug=True)

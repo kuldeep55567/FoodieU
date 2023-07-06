@@ -5,7 +5,6 @@
     text-align: center;
     margin-top: 100px;
 }
-
 input {
     width: 350px;
     height: 45px;
@@ -25,23 +24,223 @@ input {
 #signup-form button {
     margin-top: 20px;
 }
-img{
-    width: 30%;
+
+img {
+    width: 100%;
+    height: 230px;
 }
-#menu{
+
+#menu {
     display: grid;
     width: 50%;
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+
 }
-#main{
+
+#main {
     display: flex;
     width: 80%;
     margin: auto;
 }
-.dish-item{
-padding: 20px;
+
+.dish-item {
+    padding: 20px;
 }
-#cart{
-    
+#parent{
+    width: 80%;
+    display: flex;
+    margin: auto;
+    text-align: center;
 }
+#main-container {
+  width: 50%;
+}
+#order-list{
+    width: 50%;
+    border: 2px solid green;
+    font-size: 25px;
+    text-align: start;
+}
+#hello {
+    margin-top: 30px;
+}
+
+.hii {
+    margin-top: 50px;
+}
+
+#cart {
+    width: 50%;
+    position: relative;
+}
+
+.quantity-value {
+    font-size: 30px;
+}
+
+.dish-item {
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+.dish-item h3 {
+    font-size: 35px;
+}
+#cart h3{
+    font-size: 45px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#place-order-btn{
+    border: none;
+    position: absolute;
+    bottom: 1;
+    right: 35%;
+    font-size: 40px;
+    border-radius: 10px;
+    padding-inline: 15px;
+    background-color: orange;
+    color: aliceblue;
+    font-weight: 600;
+}
+#place-order-btn:hover{
+    background-color:aliceblue;
+    color: orange
+}
+#cart-items{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 20px;
+}
+#cart-items p{
+    font-size: 30px;
+}
+#cart-total-price{
+    font-size: 40px;
+}
+.cart-item{
+    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+ .chat-icon-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+  }
+  
+  .chat-icon {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+  }
+  .chat-container {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    height: 500px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    z-index: 9999;
+  }
+  
+  .chat-header {
+    background-color: #f2f2f2;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .chat-title {
+    margin: 0;
+    flex-grow: 1;
+  }
+  
+  .close-chat-btn {
+    border: none;
+    background-color: transparent;
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+  }
+  .chat-messages {
+    margin-bottom: 10px;
+    max-width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+.bot-message,
+.user-message {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  word-wrap: break-word;
+}
+  .bot-message {
+    background-color: #f2f2f2;
+    color: #333;
+    text-align: left;
+  }
+  
+  .user-message {
+    background-color: #007bff;
+    color: #fff;
+    text-align: right;
+  }
+  
+  .chat-input {
+    display: flex;
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+  }
+  
+  #userInput {
+    flex-grow: 1;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 320px;
+  }
+  
+  #sendMessageBtn {
+    margin-left: 5px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  } 
+  .message-container {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    word-wrap: break-word;
+    max-width: 70%;
+  }
+  
+  .bot {
+    background-color: #f2f2f2;
+    color: #333;
+    align-self: flex-start;
+  }
+  
+  .user {
+    background-color: #007bff;
+    color: #fff;
+    align-self: flex-end;
+  }
+  

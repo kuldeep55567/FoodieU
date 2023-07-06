@@ -3,9 +3,7 @@ const menu = document.getElementById("menu");
 const cartItemsContainer = document.getElementById("cart-items");
 const placeOrderButton = document.getElementById("place-order-btn");
 const cartTotalPriceElement = document.getElementById("cart-total-price");
-
 let cart = [];
-
 fetch(`${baseURL}/menu`, {
     method: "GET",
     headers: {
@@ -24,22 +22,22 @@ fetch(`${baseURL}/menu`, {
                         <p>Price: $${dish.price}</p>
                         <p>Stock: ${dish.stock}</p>
                         <div>
-                            <button class="add-to-cart-btn" data-dish-id="${dish.dish_id}" data-dish-price="${dish.price}">Add to Cart</button>
+                            <button class="add-to-cart-btn btn btn-primary" data-dish-id="${dish.dish_id}" data-dish-price="${dish.price}" data-dish-name="${dish.dish_name}">Add to Cart</button>
                             <div class="quantity">
-                                <button class="decrement-btn">-</button>
+                                <button class="decrement-btn btn btn-danger">➖</button>
                                 <span class="quantity-value">1</span>
-                                <button class="increment-btn">+</button>
+                                <button class="increment-btn btn btn-success">➕</button>
                             </div>
                         </div>
                     `;
             menu.appendChild(dishElement);
         });
-
         const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
 
         addToCartButtons.forEach((button) => {
             button.addEventListener("click", () => {
                 const dishId = button.dataset.dishId;
+                const dishName = button.dataset.dishName
                 const dishPrice = parseFloat(button.dataset.dishPrice);
                 const quantityValue = button.parentElement.querySelector(".quantity-value");
                 const quantity = parseInt(quantityValue.textContent);
@@ -48,9 +46,9 @@ fetch(`${baseURL}/menu`, {
                     alert("This dish is already in the cart.");
                     return;
                 }
-
                 const cartItem = {
                     dishId,
+                    dishName,
                     quantity,
                     totalPrice: dishPrice * quantity,
                 };
@@ -66,6 +64,8 @@ fetch(`${baseURL}/menu`, {
             if (cart.length === 0) {
                 alert("Cart is empty. Add items to cart before placing an order.");
                 return;
+            }else{
+                alert("Order Placed Succesfully")
             }
 
             const orderData = {
@@ -89,7 +89,6 @@ fetch(`${baseURL}/menu`, {
                         alert(data.message);
                         // Clear the cart after placing the order
                         localStorage.removeItem("cartItems");
-                        updateCartCount(0);
                         renderCartItems([]);
                     }
                 })
@@ -98,8 +97,8 @@ fetch(`${baseURL}/menu`, {
                 });
         });
 
-        function isDishInCart(dishId) {
-            return cart.some((item) => item.dishId === dishId);
+        function isDishInCart(dishName) {
+            return cart.some((item) => item.dishName=== dishName);
         }
 
         function updateCart() {
@@ -110,10 +109,9 @@ fetch(`${baseURL}/menu`, {
                 const cartItemElement = document.createElement("div");
                 cartItemElement.classList.add("cart-item");
                 cartItemElement.innerHTML = `
-                            <p>Dish ID: ${item.dishId}</p>
+                            <p>Dish Name: ${item.dishName}</p>
                             <p>Quantity: ${item.quantity}</p>
                             <p>Price: $${item.totalPrice}</p>
-                            <button class="order-btn" data-dish-id="${item.dishId}">Order</button>
                         `;
                 cartItemsContainer.appendChild(cartItemElement);
 
