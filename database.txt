@@ -1,0 +1,120 @@
+===============================MySQL and MongoDB Queries=============================
+
+1.  CREATE TABLE Customers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    address VARCHAR(255),
+    phone_number VARCHAR(20)
+);
+
+1. db.createCollection("Customers", {
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["id", "name", "email", "address", "phone_number"],
+         properties: {
+            id: {
+               bsonType: "int",
+               description: "Unique identifier"
+            },
+            name: {
+               bsonType: "string",
+               description: "Customer's name"
+            },
+            email: {
+               bsonType: "string",
+               description: "Customer's email"
+            },
+            address: {
+               bsonType: "string",
+               description: "Customer's address"
+            },
+            phone_number: {
+               bsonType: "string",
+               description: "Customer's phone number"
+            }
+         }
+      }
+   }
+})
+
+2. INSERT INTO Customers (name, email, address, phone_number) VALUES
+    ('Kuldeep', 'kuldeep@example.com', 'Delhi', '123-456-7890'),
+    ('Suman', 'suman@example.com', 'Goa', '987-654-3210'),
+    ('Harsh', 'harsh@example.com', 'Mombai', '555-555-5555'),
+    ('Varun', 'varun@example.com', 'Goa', '111-222-3333'),
+    ('Rajat', 'rajat@example.com', 'Chennai', '444-444-4444');
+
+2. db.Customers.insertMany([
+    {
+        name: 'Kuldeep',
+        email: 'kuldeep@example.com',
+        address: 'Delhi',
+        phone_number: '123-456-7890'
+    },
+    {
+        name: 'Suman',
+        email: 'suman@example.com',
+        address: 'Goa',
+        phone_number: '987-654-3210'
+    },
+    {
+        name: 'Harsh',
+        email: 'harsh@example.com',
+        address: 'Mumbai',
+        phone_number: '555-555-5555'
+    },
+    {
+        name: 'Varun',
+        email: 'varun@example.com',
+        address: 'Goa',
+        phone_number: '111-222-3333'
+    },
+    {
+        name: 'Rajat',
+        email: 'rajat@example.com',
+        address: 'Chennai',
+        phone_number: '444-444-4444'
+    }
+])
+
+
+3.SELECT * FROM Customers;
+3.db.Customers.find();
+
+4. SELECT name, email FROM Customers;
+4.db.Customers.find({}, { name: 1, email: 1 });
+
+5.SELECT * FROM Customers WHERE id = 3;
+5.db.Customers.find({ id: 3 });
+
+6.SELECT * FROM Customers WHERE name LIKE 'A%';
+6.db.Customers.find({ name: /^A/ });
+
+7.SELECT * FROM Customers ORDER BY name DESC;
+7.db.Customers.find().sort({ name: -1 });
+
+8.UPDATE Customers SET address = 'New Address' WHERE id = 4;
+8.db.Customers.updateOne({ id: 4 }, { $set: { address: 'New Address' } });
+
+9.SELECT * FROM Customers ORDER BY id ASC LIMIT 3;
+9.db.Customers.find().sort({ id: 1 }).limit(3);
+
+10.DELETE FROM Customers WHERE id = 2;
+10.db.Customers.deleteOne({ id: 2 });
+
+11.SELECT COUNT(*) FROM Customers;
+11.db.Customers.count();
+
+12.SELECT * FROM Customers ORDER BY id ASC OFFSET 2;
+12.db.Customers.find().sort({ id: 1 }).skip(2);
+
+13.SELECT * FROM Customers WHERE id > 2 AND name LIKE 'B%';
+13.db.Customers.find({ id: { $gt: 2 }, name: /^B/ });
+
+14.SELECT * FROM Customers WHERE id < 3 OR name LIKE '%s';
+14.db.Customers.find({ $or: [ { id: { $lt: 3 } }, { name: /s$/ } ] });
+
+15.SELECT * FROM Customers WHERE phone_number IS NULL OR phone_number = '';
+15.db.Customers.find({ $or: [ { phone_number: null }, { phone_number: "" } ] });
