@@ -35,11 +35,9 @@ def signup():
     name = request.json["name"]
     email = request.json["email"]
     password = request.json["password"]
-
     user_exists = mongo.db.users.find_one({"email": email}) is not None
     if user_exists:
         return jsonify({"error": "Email already exists"}), 409
-
     hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
     new_user = {
         "name": name,
@@ -48,7 +46,6 @@ def signup():
         "role": "user",
     }
     mongo.db.users.insert_one(new_user)
-
     return jsonify({"message": "Registration successful"})
 
 
@@ -56,14 +53,11 @@ def signup():
 def login_user():
     email = request.json["email"]
     password = request.json["password"]
-
     user = mongo.db.users.find_one({"email": email})
     if user is None:
         return jsonify({"error": "Unauthorized Access"}), 401
-
     if not bcrypt.check_password_hash(user["password"], password):
         return jsonify({"error": "Unauthorized"}), 401
-
     # Generate JWT token
     user_role = user.get("role") if user and "role" in user else "user"
     access_token = create_access_token(identity=str(user["_id"]))
@@ -136,11 +130,9 @@ def update_dish(dish_id):
     description = request.json.get("description")
     price = request.json.get("price")
     stock = request.json.get("stock")
-
     dish = mongo.db.menu.find_one({"_id": ObjectId(dish_id)})
     if not dish:
         return jsonify({"error": "Dish not found"}), 404
-
     if dish_name is not None:
         dish["dish_name"] = dish_name
     if img is not None:
@@ -173,13 +165,10 @@ def place_order():
         dish_obj = mongo.db.menu.find_one({"_id": ObjectId(dish_id)})
         if dish_obj is None:
             return jsonify({"error": "Dish not found"}), 404
-
         if dish_obj["stock"] < quantity:
             return jsonify({"error": "Insufficient stock for a dish"}), 400
-
         dish_price = dish_obj["price"]
         item_total_price = dish_price * quantity
-
         order_item = {
             "dish_id": dish_id,
             "quantity": quantity,
@@ -243,19 +232,16 @@ def all_orders():
     user = mongo.db.users.find_one({"_id": ObjectId(current_user)})
     if user["role"] != "admin":
         return jsonify({"error": "Access denied"}), 403
-
     status = request.args.get("status", "all")
-
     if status == "all":
         orders = list(mongo.db.orders.find())
     else:
         orders = list(mongo.db.orders.find({"status": status}))
-
     formatted_orders = []
     for order in orders:
         formatted_order = {
             "order_id": str(order["_id"]),
-            "user_id": str(order.get("user", "")),  # Use 'user' instead of 'user_id'
+            "user_id": str(order.get("user", "")),
             "dishes": [item["dish_id"] for item in order.get("order_items", [])],
             "total_price": order.get("total_price", 0),
             "status": order.get("status", ""),
